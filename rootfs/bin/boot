@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -eof pipefail
+
+REDIS_CONFIG_FILE=/etc/redis/redis.conf
+
+# Do not daemonize
+sed -i "s/daemonize yes/daemonize no/" $REDIS_CONFIG_FILE
+
+# Bind to 0.0.0.0
+sed -i "s/bind 127.0.0.1/bind 0.0.0.0/" $REDIS_CONFIG_FILE
+
+# Log to stdout
+sed -i "s:logfile /var/log/redis/redis-server.log:logfile \"\":" $REDIS_CONFIG_FILE
+
+# Set password
+REDIS_PASSWORD_FILE=/var/run/secrets/deis/redis/creds/password
+if [ -e $REDIS_PASSWORD_FILE ]; then
+	REDIS_PASSWORD="$(cat /var/run/secrets/deis/redis/creds/password)"
+	if [ ! -z "$REDIS_PASSWORD" ]; then
+		sed -i "s/# requirepass foobared/requirepass $REDIS_PASSWORD/" $REDIS_CONFIG_FILE
+	fi
+fi
+
+exec redis-server $REDIS_CONFIG_FILE
