@@ -14,5 +14,3 @@ WORKDIR /var/lib/redis
 
 CMD ["/bin/boot"]
 EXPOSE 6379
-
-ENV WORKFLOW_RELEASE 2.1.0
