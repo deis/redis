@@ -25,7 +25,7 @@ dev:
 # For cases where we're building from local
 # We also alter the RC file to set the image name.
 docker-build:
-	docker build --rm -t ${IMAGE} rootfs
+	docker build --no-cache --rm -t ${IMAGE} rootfs
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
 
 test: test-style test-unit test-functional
