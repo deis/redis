@@ -2,9 +2,8 @@ FROM quay.io/deis/base:v0.3.4
 
 COPY . /
 
-RUN apt-get update \
-	apt-get install -y --no-install-recommends redis-server && \
-    chown -R redis:redis /etc/redis /var/lib/redis /var/log/redis && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends redis-server && \
     # cleanup
     apt-get clean -y && \
     # package up license files if any by appending to existing tar
@@ -16,14 +15,11 @@ RUN apt-get update \
         /usr/share/info \
         /usr/share/locale \
         /var/lib/apt/lists/* \
-        /var/log/* \
         /var/cache/debconf/* \
-        /etc/systemd \
-        /lib/lsb \
-        /lib/udev \
         /usr/lib/x86_64-linux-gnu/gconv/IBM* \
         /usr/lib/x86_64-linux-gnu/gconv/EBC* && \
-    bash -c "mkdir -p /usr/share/man/man{1..8}"
+    bash -c "mkdir -p /usr/share/man/man{1..8}" && \
+    chown -R redis:redis /etc/redis /var/lib/redis /var/log/redis
 
 USER redis
 WORKDIR /var/lib/redis
