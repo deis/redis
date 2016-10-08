@@ -1,0 +1,45 @@
+{{- if eq .Values.global.logger_redis_location "on-cluster" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deis-logger-redis
+  labels:
+    heritage: deis
+  annotations:
+    component.deis.io/version: {{ .Values.docker_tag }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: deis-logger-redis
+  template:
+    metadata:
+      labels:
+        app: deis-logger-redis
+    spec:
+      containers:
+      - name: deis-logger-redis
+        image: quay.io/{{ .Values.org }}/redis:{{ .Values.docker_tag }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+{{- if or (.Values.limits_cpu) (.Values.limits_memory)}}
+        resources:
+          limits:
+{{- if (.Values.limits_cpu) }}
+            cpu: {{.Values.limits_cpu}}
+{{- end}}
+{{- if (.Values.limits_memory) }}
+            memory: {{.Values.limits_memory}}
+{{- end}}
+{{- end}}
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: logger-redis-creds
+          mountPath: /var/run/secrets/deis/redis/creds
+      volumes:
+      - name: logger-redis-creds
+        secret:
+          secretName: logger-redis-creds
+{{- end }}
