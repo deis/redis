@@ -38,7 +38,16 @@ spec:
         volumeMounts:
         - name: logger-redis-creds
           mountPath: /var/run/secrets/deis/redis/creds
+        - name: logger-redis-data
+          mountPath: /var/lib/redis
       volumes:
+      - name: logger-redis-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: deis-logger-redis
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
       - name: logger-redis-creds
         secret:
           secretName: logger-redis-creds

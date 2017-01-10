@@ -17,3 +17,9 @@ db: "0"
 host: "redis host"
 port: "redis port"
 password: "redis password" # "" == no password
+
+persistence:
+  enabled: false
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 2Gi

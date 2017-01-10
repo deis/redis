@@ -1,0 +1,17 @@
+{{- if .Values.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: deis-logger-redis
+  labels:
+    heritage: deis
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.storageClass }}
+    component.deis.io/version: {{ .Values.docker_tag }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+{{- end }}
