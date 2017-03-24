@@ -28,7 +28,7 @@ docker-build:
 	docker build ${DOCKER_BUILD_FLAGS} -t ${IMAGE} rootfs
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
 
-test: test-style test-unit test-functional
+test: test-style
 
 test-style:
 	${DEV_ENV_CMD} shellcheck $(SHELL_SCRIPTS)
