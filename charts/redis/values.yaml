@@ -12,8 +12,9 @@ global:
   # - off-cluster: Run Redis outside the Kubernetes cluster (configure in loggerRedis section)
   logger_redis_location: "on-cluster"
 
-# Configure the following ONLY if using an off-cluster Redis instance for logger
-db: "0"
-host: "redis host"
-port: "redis port"
-password: "redis password" # "" == no password
+redis:
+  # Configure the following ONLY if using an off-cluster Redis instance for logger
+  db: "0"
+  host: "redis host"
+  port: "redis port"
+  password: "redis password" # "" == no password
